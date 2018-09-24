@@ -26,7 +26,7 @@ import java.util.List;
 @Component
 public class BackupHandlerImpl implements BackupHandler {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(MainServerReaderImpl.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(BackupHandlerImpl.class);
     @Autowired
     private TodoService todoService;
     private MainServerReader mainServerReader = new MainServerReaderImpl();

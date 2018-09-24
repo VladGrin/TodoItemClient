@@ -3,6 +3,7 @@ package com.todoitem.client.service.impl;
 import com.todoitem.client.entity.Backup;
 import com.todoitem.client.entity.Todo;
 import com.todoitem.client.entity.User;
+import com.todoitem.client.exception.ReceiveException;
 import com.todoitem.client.repository.BackupRepository;
 import com.todoitem.client.service.BackupService;
 import com.todoitem.client.service.model.BackupAccounts;
@@ -18,7 +19,7 @@ import java.util.List;
 @Component
 public class BackupServiceImpl implements BackupService {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(MainServerReaderImpl.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(BackupServiceImpl.class);
     @Autowired
     private BackupRepository backupRepository;
 
@@ -47,8 +48,11 @@ public class BackupServiceImpl implements BackupService {
     }
 
     @Override
-    public String findBackupById(Long backupId) {
+    public String findBackupById(Long backupId) throws ReceiveException {
         Backup backupById = backupRepository.findBackupById(backupId);
+        if (backupById == null){
+             throw new ReceiveException("No content");
+        }
         String text = "";
         for (User user : backupById.getUsers()) {
             for (Todo todo : user.getTodos()) {

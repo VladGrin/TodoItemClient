@@ -1,5 +1,6 @@
 package com.todoitem.client.service;
 
+import com.todoitem.client.exception.ReceiveException;
 import com.todoitem.client.service.model.BackupAccounts;
 import com.todoitem.client.service.model.ListBackups;
 import org.springframework.stereotype.Service;
@@ -13,5 +14,5 @@ public interface BackupService {
 
     List<ListBackups> findListBackups();
 
-    String findBackupById(Long id);
+    String findBackupById(Long id) throws ReceiveException;
 }

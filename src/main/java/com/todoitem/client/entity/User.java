@@ -1,5 +1,6 @@
 package com.todoitem.client.entity;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -7,11 +8,15 @@ import java.util.List;
 
 @Entity
 @Data
+//@Builder
 @Table(name = "user")
 public class User {
     @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @Column(name = "user_id")
+    private Long userId;
 
     @Column(name = "username")
     private String username;
@@ -27,6 +32,14 @@ public class User {
     private List<Todo> todos;
 
     public User() {
+    }
+
+    public User(Long userId, String username, String email, Backup backup, List<Todo> todos) {
+        this.userId = userId;
+        this.username = username;
+        this.email = email;
+        this.backup = backup;
+        this.todos = todos;
     }
 }
 

@@ -1,11 +1,16 @@
 package com.todoitem.client.service;
 
-import com.todoitem.client.entity.Backup;
+import com.todoitem.client.service.model.BackupAccounts;
+import com.todoitem.client.service.model.ListBackups;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public interface BackupService {
-    Iterable<Backup> findAll();
 
-    void save(Backup backup);
+    List<BackupAccounts> findAllBackupId();
+
+    List<ListBackups> findListBackups();
+
 }

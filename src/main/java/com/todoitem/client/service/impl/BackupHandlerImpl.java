@@ -8,31 +8,31 @@ import com.todoitem.client.entity.User;
 import com.todoitem.client.exception.ConnectingException;
 import com.todoitem.client.service.BackupHandler;
 import com.todoitem.client.service.MainServerReader;
+import com.todoitem.client.service.TodoService;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class BackupHandlerImpl implements BackupHandler {
 
+    @Autowired
+    private TodoService todoService;
     private MainServerReader mainServerReader = new MainServerReaderImpl();
-    private Integer backupId = 0;
+    private Response response;
 
     @Override
     public Backup getBackup() throws ConnectingException {
         Date date = new Date();
-        Response response = mainServerReader.getResponseFromMainServer();
-        List<User> users = findUsersFromMainServer(response);
-//        List<Todo> todos = findTodosFromMainServer(users);
+        response = mainServerReader.getResponseFromMainServer();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Status status = null;
         int responseStatus = response.getStatus();
@@ -43,13 +43,20 @@ public class BackupHandlerImpl implements BackupHandler {
         } else {
             status = Status.IN_PROGRESS;
         }
-        return new Backup(dateFormat.format(date), status, users);
+        return new Backup(dateFormat.format(date), status, null);
     }
 
     @Override
-    public List<User> findUsersFromMainServer(Response response) {
-        String usersList = null;
-        usersList = response.readEntity(String.class);
+    public void saveToDB() {
+
+        Backup backup = null;
+        try {
+            backup = getBackup();
+        } catch (ConnectingException e) {
+            e.printStackTrace();
+        }
+
+        String usersList = response.readEntity(String.class);
         ObjectMapper mapper = new ObjectMapper();
         List<User> users = null;
         try {
@@ -57,13 +64,14 @@ public class BackupHandlerImpl implements BackupHandler {
         } catch (IOException e) {
             e.getStackTrace();
         }
-        return users;
-    }
 
-//    @Override
-//    public List<Todo> findTodosFromMainServer(List<User> users) {
-//        List<Todo> todos = new ArrayList<>();
-//        users.stream().map(x -> todos.addAll(x.getTodos())).collect(Collectors.toList());
-//        return todos;
-//    }
+        for(User user : users){
+            User newUser = new User(user.getId(), user.getUsername(), user.getEmail(), backup, null);
+            for (Todo todo : user.getTodos()) {
+                Todo newTodo = new Todo(todo.getId(), todo.getSubject(), todo.getDueDate(),
+                        todo.isDone(), newUser);
+                todoService.save(newTodo);
+            }
+        }
+    }
 }

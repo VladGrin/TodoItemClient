@@ -1,5 +1,6 @@
 package com.todoitem.client.entity;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -7,11 +8,12 @@ import java.util.List;
 
 @Entity
 @Data
+//@Builder
 @Table(name = "backup")
 public class Backup{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
     @Column(name = "date")
     private String date;
@@ -30,4 +32,5 @@ public class Backup{
         this.status = status;
         this.users = users;
     }
+
 }

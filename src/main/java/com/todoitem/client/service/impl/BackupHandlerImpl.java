@@ -10,6 +10,8 @@ import com.todoitem.client.service.BackupHandler;
 import com.todoitem.client.service.MainServerReader;
 import com.todoitem.client.service.TodoService;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +26,7 @@ import java.util.List;
 @Component
 public class BackupHandlerImpl implements BackupHandler {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(MainServerReaderImpl.class);
     @Autowired
     private TodoService todoService;
     private MainServerReader mainServerReader = new MainServerReaderImpl();
@@ -43,7 +46,9 @@ public class BackupHandlerImpl implements BackupHandler {
         } else {
             status = Status.IN_PROGRESS;
         }
-        return new Backup(dateFormat.format(date), status, null);
+        Backup backup = new Backup(dateFormat.format(date), status, null);
+        LOGGER.info("Backup received. Backup details: " + backup);
+        return backup;
     }
 
     @Override
@@ -67,9 +72,11 @@ public class BackupHandlerImpl implements BackupHandler {
 
         for(User user : users){
             User newUser = new User(user.getId(), user.getUsername(), user.getEmail(), backup, null);
+            LOGGER.info("User created. User details: " + newUser);
             for (Todo todo : user.getTodos()) {
                 Todo newTodo = new Todo(todo.getId(), todo.getSubject(), todo.getDueDate(),
                         todo.isDone(), newUser);
+                LOGGER.info("Todo created. Todo details: " + newTodo);
                 todoService.save(newTodo);
             }
         }

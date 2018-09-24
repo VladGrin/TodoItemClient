@@ -13,4 +13,5 @@ public interface BackupService {
 
     List<ListBackups> findListBackups();
 
+    String findBackupById(Long id);
 }

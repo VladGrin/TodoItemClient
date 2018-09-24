@@ -7,21 +7,19 @@ import com.todoitem.client.service.model.ListBackups;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
-@RequestMapping("/backups")
+@RestController
+@RequestMapping
 public class BackupController {
     @Autowired
     private BackupService backupService;
     @Autowired
     private BackupHandler backupHandler;
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping("/backups")
     public ResponseEntity<List<BackupAccounts>> addBackup() {
 
         backupHandler.saveToDB();
@@ -30,9 +28,20 @@ public class BackupController {
         return new ResponseEntity<>(backups, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping("/backups")
     public ResponseEntity<List<ListBackups>> listBackups() {
         List<ListBackups> list = backupService.findListBackups();
         return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @GetMapping("/exports/{backupId}")
+    public ResponseEntity<String> exportBackup(@PathVariable Long backupId) {
+
+        String backupById = backupService.findBackupById(backupId);
+
+        if (backupById == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(backupById, HttpStatus.OK);
     }
 }

@@ -32,8 +32,7 @@ public class BackupHandlerImpl implements BackupHandler {
     private MainServerReader mainServerReader = new MainServerReaderImpl();
     private Response response;
 
-    @Override
-    public Backup getBackup() throws ConnectionException {
+    private Backup getBackup() throws ConnectionException {
         Date date = new Date();
         response = mainServerReader.getResponseFromMainServer();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

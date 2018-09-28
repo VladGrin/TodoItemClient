@@ -9,5 +9,4 @@ public interface BackupHandler {
 
     void saveToDB();
 
-    Backup getBackup() throws ConnectionException;
 }

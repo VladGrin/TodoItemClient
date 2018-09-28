@@ -1,7 +1,6 @@
 # TodoItemClient
 Инструкция для запуска приложения на Windows.
 - для запуска приложения требуется Java SE 8.
-- распакуйте todoitemclient.zip
 - запустите файл todoitemclient.bat
 - для доступа используйте порт 9990
 

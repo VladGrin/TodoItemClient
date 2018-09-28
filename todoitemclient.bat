@@ -1,3 +1,3 @@
 @echo off
-java -jar target/TodoItemClient-5.0.jar
+java -jar TodoItemClient-5.0.jar
 pause

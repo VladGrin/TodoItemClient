@@ -1,10 +1,9 @@
 package com.todoitem.client.exception;
 
-public class ReceiveException extends Exception {
-
+public class ConnectionException extends Exception {
     private String message;
 
-    public ReceiveException(String message) {
+    public ConnectionException(String message) {
         this.message = message;
     }
 

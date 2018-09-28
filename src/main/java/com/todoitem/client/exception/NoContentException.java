@@ -1,9 +1,10 @@
 package com.todoitem.client.exception;
 
-public class ConnectingException extends Exception {
+public class NoContentException extends Exception {
+
     private String message;
 
-    public ConnectingException(String message) {
+    public NoContentException(String message) {
         this.message = message;
     }
 

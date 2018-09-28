@@ -5,7 +5,7 @@ import com.todoitem.client.entity.Backup;
 import com.todoitem.client.entity.Status;
 import com.todoitem.client.entity.Todo;
 import com.todoitem.client.entity.User;
-import com.todoitem.client.exception.ConnectingException;
+import com.todoitem.client.exception.ConnectionException;
 import com.todoitem.client.service.BackupHandler;
 import com.todoitem.client.service.MainServerReader;
 import com.todoitem.client.service.TodoService;
@@ -33,7 +33,7 @@ public class BackupHandlerImpl implements BackupHandler {
     private Response response;
 
     @Override
-    public Backup getBackup() throws ConnectingException {
+    public Backup getBackup() throws ConnectionException {
         Date date = new Date();
         response = mainServerReader.getResponseFromMainServer();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -57,7 +57,7 @@ public class BackupHandlerImpl implements BackupHandler {
         Backup backup = null;
         try {
             backup = getBackup();
-        } catch (ConnectingException e) {
+        } catch (ConnectionException e) {
             e.printStackTrace();
         }
 

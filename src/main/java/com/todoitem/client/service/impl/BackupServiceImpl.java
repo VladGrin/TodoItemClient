@@ -3,7 +3,9 @@ package com.todoitem.client.service.impl;
 import com.todoitem.client.entity.Backup;
 import com.todoitem.client.entity.Todo;
 import com.todoitem.client.entity.User;
-import com.todoitem.client.exception.ReceiveException;
+import com.todoitem.client.exception.NoContentException;
+import com.todoitem.client.formatter.ResponseFormatter;
+import com.todoitem.client.formatter.impl.CSVResponseFormatter;
 import com.todoitem.client.repository.BackupRepository;
 import com.todoitem.client.service.BackupService;
 import com.todoitem.client.service.model.BackupAccounts;
@@ -22,6 +24,7 @@ public class BackupServiceImpl implements BackupService {
     private final static Logger LOGGER = LoggerFactory.getLogger(BackupServiceImpl.class);
     @Autowired
     private BackupRepository backupRepository;
+    private ResponseFormatter formatter;
 
     @Override
     public List<BackupAccounts> findAllBackupId() {
@@ -48,20 +51,14 @@ public class BackupServiceImpl implements BackupService {
     }
 
     @Override
-    public String findBackupById(Long backupId) throws ReceiveException {
+    public String findBackupById(Long backupId) throws NoContentException {
         Backup backupById = backupRepository.findBackupById(backupId);
         if (backupById == null){
-             throw new ReceiveException("No content");
+             throw new NoContentException("No content");
         }
-        String text = "";
-        for (User user : backupById.getUsers()) {
-            for (Todo todo : user.getTodos()) {
-                text += "Username;TodoItemId;Subject;DueDate;Done\n" +
-                        user.getUsername() + ";" + todo.getId() + ";" + todo.getSubject() +
-                        ";" + todo.getDueDate() + ";" + todo.isDone() + "\n";
-            }
-        }
-        LOGGER.info("Backup " + backupId + " recieved. Format CSV. Backup details: " + text);
-        return text;
+        formatter = new CSVResponseFormatter(backupById);
+        String csvText = formatter.getCSVFormat();
+        LOGGER.info("Backup " + backupById + " recieved. Format CSV. Backup details: " + csvText);
+        return csvText;
     }
 }

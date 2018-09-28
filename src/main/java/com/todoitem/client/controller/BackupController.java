@@ -1,6 +1,6 @@
 package com.todoitem.client.controller;
 
-import com.todoitem.client.exception.ReceiveException;
+import com.todoitem.client.exception.NoContentException;
 import com.todoitem.client.service.BackupHandler;
 import com.todoitem.client.service.BackupService;
 import com.todoitem.client.service.model.BackupAccounts;
@@ -45,7 +45,7 @@ public class BackupController {
         try {
             String backupById = backupService.findBackupById(backupId);
             return new ResponseEntity<>(backupById, HttpStatus.OK);
-        } catch (ReceiveException e) {
+        } catch (NoContentException e) {
             System.out.println(e.getMessage());
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
